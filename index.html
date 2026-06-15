@@ -428,13 +428,442 @@
                 return;
             }
 
-            // C. Show Success Interface Panel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win Your Dream Car | Mega Giveaway</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #d97706;
+            --success: #10b981;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .hero-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+        }
+
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="tel"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Number Grid */
+        .grid-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+        }
+
+        .number-btn {
+            background: white;
+            border: 2px solid #cbd5e1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .number-btn:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .number-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Payment Methods */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .pay-card {
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .pay-card:hover {
+            border-color: var(--secondary);
+        }
+
+        .pay-card.selected {
+            border-color: var(--success);
+            background: #ecfdf5;
+            color: var(--success);
+        }
+
+        .bank-details {
+            background: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid var(--success);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* File Upload */
+        .file-upload-box {
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Car Giveaway Lottery</h1>
+        <div class="hero-badge">Grand Prize: Brand New Car!</div>
+        <div class="info-bar">
+            <div><strong>Total Tickets:</strong> 3,000</div>
+            <div><strong>Ticket Price:</strong> 5,000 ETB</div>
+        </div>
+    </header>
+
+    <div id="step1" class="step-panel active">
+        <h2>Step 1: User Registration</h2>
+        <form id="regForm" onsubmit="nextStep(2); return false;">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" required placeholder="e.g. Addis Ababa">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required placeholder="e.g. 0911223344">
+            </div>
+            <button type="submit" class="btn">Proceed to Choose Number</button>
+        </form>
+    </div>
+
+    <div id="step2" class="step-panel">
+        <h2>Step 2: Choose Your Lucky Number</h2>
+        <p style="margin-bottom: 15px; color: #64748b;">Scroll down to see all 3,000 available numbers.</p>
+        
+        <div class="grid-container">
+            <div class="number-grid" id="numberGrid">
+                </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <strong>Selected Number:</strong> <span id="selectedNumDisplay" style="color: var(--secondary); font-size: 1.2rem; font-weight: bold;">None</span>
+        </div>
+        
+        <button id="btnGoToPay" class="btn" disabled onclick="nextStep(3)">Proceed to Payment</button>
+    </div>
+
+    <div id="step3" class="step-panel">
+        <h2>Step 3: Secure Payment</h2>
+        <p style="margin-bottom: 15px;">Please select your preferred payment network to clear the <strong>5,000 ETB</strong> fee.</p>
+        
+        <div class="payment-options">
+            <div class="pay-card" onclick="selectPayment('telebirr', event)">Telebirr</div>
+            <div class="pay-card" onclick="selectPayment('cbe', event)">CBE</div>
+            <div class="pay-card" onclick="selectPayment('boa', event)">BOA</div>
+        </div>
+
+        <div id="bankDetails" class="bank-details">
+            <p id="bankInstructions"></p>
+        </div>
+
+        <div class="form-group">
+            <label>Upload Payment Receipt / Screenshot</label>
+            <div class="file-upload-box" onclick="document.getElementById('screenshotInput').click()">
+                <p id="uploadText">📸 Click to upload your transaction screenshot</p>
+                <input type="file" id="screenshotInput" accept="image/*" style="display: none;" onchange="handleFileUpload()">
+            </div>
+        </div>
+
+        <button id="btnSubmitLottery" class="btn" disabled onclick="submitLottery()">Submit for Verification</button>
+    </div>
+
+    <div id="step4" class="step-panel">
+        <div style="text-align: center; padding: 20px;">
+            <span style="font-size: 4rem; color: var(--success);">🎉</span>
+            <h2 style="color: var(--success); margin-top: 10px;">Registration Submitted Successfully!</h2>
+            <p style="margin: 15px 0; font-size: 1.1rem;">Thank you, <strong id="confName"></strong>!</p>
+            <p>Your lucky number is <strong style="color: var(--secondary);" id="confNumber"></strong>.</p>
+            <p style="color: #64748b; margin-top: 10px;">Our administration team is currently verifying your payment screenshot. You will receive a verification confirmation shortly.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Initialized Connection with matching URL and verified Anon Key
+    const SUPABASE_URL = "https://njopsmrbzzpwpoejaoum.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qb3BzbXJienpwd3BvZWphb3VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NzAxMjUsImV4cCI6MjA5NzA0NjEyNX0.o6nI-MoB0LlWCsj6jeG3JALfCxTOdWoODSm6HRzF0Ec";
+    
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let selectedNumber = null;
+    let selectedMethod = null;
+
+    // Generate 3000 numbers dynamically in the grid
+    const grid = document.getElementById('numberGrid');
+    for (let i = 1; i <= 3000; i++) {
+        const btn = document.createElement('div');
+        btn.classList.add('number-btn');
+        btn.innerText = i;
+        btn.onclick = function() {
+            document.querySelectorAll('.number-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedNumber = i;
+            document.getElementById('selectedNumDisplay').innerText = i;
+            document.getElementById('btnGoToPay').disabled = false;
+        };
+        grid.appendChild(btn);
+    }
+
+    function nextStep(stepNum) {
+        document.querySelectorAll('.step-panel').forEach(panel => panel.classList.remove('active'));
+        document.getElementById('step' + stepNum).classList.add('active');
+    }
+
+    function selectPayment(method, event) {
+        selectedMethod = method;
+        document.querySelectorAll('.pay-card').forEach(card => card.classList.remove('selected'));
+        
+        event.currentTarget.classList.add('selected');
+        
+        const bankBox = document.getElementById('bankDetails');
+        const bankText = document.getElementById('bankInstructions');
+        bankBox.style.display = 'block';
+
+        if(method === 'telebirr') {
+            bankText.innerHTML = "<strong>Telebirr Merchant ID:</strong> 112233<br><strong>Account Name:</strong> Car Giveaway Inc.<br>Please pay exactly 5,000 ETB.";
+        } else if(method === 'cbe') {
+            bankText.innerHTML = "<strong>CBE Account Number:</strong> 1000123456789<br><strong>Account Name:</strong> Car Giveaway Inc.<br>Please pay exactly 5,000 ETB.";
+        } else if(method === 'boa') {
+            bankText.innerHTML = "<strong>BOA Account Number:</strong> 98765432<br><strong>Account Name:</strong> Car Giveaway Inc.<br>Please pay exactly 5,000 ETB.";
+        }
+        checkFinalValidity();
+    }
+
+    function handleFileUpload() {
+        const input = document.getElementById('screenshotInput');
+        if (input.files && input.files[0]) {
+            document.getElementById('uploadText').innerText = "✅ " + input.files[0].name + " uploaded";
+            checkFinalValidity();
+        }
+    }
+
+    function checkFinalValidity() {
+        const fileInput = document.getElementById('screenshotInput');
+        if (selectedMethod && fileInput.files.length > 0) {
+            document.getElementById('btnSubmitLottery').disabled = false;
+        }
+    }
+
+    // 2. Write details straight into your table layout
+    async function submitLottery() {
+        const submitButton = document.getElementById('btnSubmitLottery');
+        submitButton.disabled = true;
+        submitButton.innerText = "Submitting registration...";
+
+        const name = document.getElementById('fullName').value;
+        const city = document.getElementById('city').value;
+        const phone = document.getElementById('phone').value;
+        const fileInput = document.getElementById('screenshotInput');
+        const file = fileInput.files[0];
+
+        try {
+            let screenshotPublicUrl = "";
+
+            // A. Optional: Handles screenshot upload if you've initialized a 'receipts' storage bucket
+            if (file) {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}_${selectedNumber}.${fileExt}`;
+                const filePath = `screenshots/${fileName}`;
+
+                const { data: storageData, error: storageError } = await _supabase
+                    .storage
+                    .from('receipts')
+                    .upload(filePath, file);
+
+                if (!storageError) {
+                    const { data: urlData } = _supabase.storage.from('receipts').getPublicUrl(filePath);
+                    screenshotPublicUrl = urlData.publicUrl;
+                }
+            }
+
+            // B. Direct data injection into 'car_lottery'
+            const { data, error } = await _supabase
+                .from('car_lottery')
+                .insert([
+                    {
+                        full_name: name,
+                        city: city,
+                        phone_number: phone,
+                        lucky_number: parseInt(selectedNumber),
+                        payment_method: selectedMethod,
+                        screenshot_url: screenshotPublicUrl,
+                        status: 'Pending'
+                    }
+                ]);
+
+            if (error) {
+                if (error.code === '23505') {
+                    alert(`Sorry! Lucky number #${selectedNumber} has already been claimed by another user. Please choose a different number.`);
+                } else {
+                    alert("Database Error: " + error.message);
+                }
+                submitButton.disabled = false;
+                submitButton.innerText = "Submit for Verification";
+                return;
+            }
+
+            // C. Final step interface rendering
             document.getElementById('confName').innerText = name;
             document.getElementById('confNumber').innerText = "#" + selectedNumber;
             nextStep(4);
 
         } catch (err) {
-            alert("Network connection error. Please check your internet and try again.");
+            alert("Network connection drop. Please double-check your connection and retry.");
             submitButton.disabled = false;
             submitButton.innerText = "Submit for Verification";
         }
