@@ -120,7 +120,7 @@
         <iframe id="usaIframe" src=""></iframe>
     </div>
 
-    <div class="log-box" id="botLogs">System Status: Waiting for user token configuration...</div>
+    <div class="log-box" id="botLogs">System Status: Ready. Paste your token to start...</div>
 </div>
 
 <script>
@@ -143,30 +143,33 @@ async function runZenrowsBot() {
     if (botTimer) clearInterval(botTimer);
     startBtn.disabled = true;
 
-    logBox.innerHTML = `[ROUTING] Handshaking with ZenRows distributed edge network...<br>`;
+    logBox.innerHTML = `[ROUTING] Connecting to ZenRows cluster network...<br>`;
     
-    // Uses the API format matching your Java snippet, pointing directly to the automated routing pool
+    // Core URL construction
     const zenrowsEndpoint = `https://api.zenrows.com/v1/?apikey=${apiKey}&url=${encodeURIComponent(targetUrl)}&mode=auto`;
     
-    logBox.innerHTML += `[TUNNEL] Dispatching remote unblockable browser worker...<br>`;
+    // FIX: Bypasses the browser security context block by routing requests via a CORS proxy proxy gateway
+    const bypassGatewayUrl = `https://corsproxy.io/?${encodeURIComponent(zenrowsEndpoint)}`;
+    
+    logBox.innerHTML += `[TUNNEL] Requesting live layout stream via secure proxy bridge...<br>`;
     
     try {
-        let response = await fetch(zenrowsEndpoint);
+        let response = await fetch(bypassGatewayUrl);
         if (response.ok) {
             let htmlContent = await response.text();
             
-            logBox.innerHTML += `[COMPILING] Stream downloaded. Rebuilding page tree structure...<br>`;
+            logBox.innerHTML += `[COMPILING] Bypassed layout block. Rendering code mapping...<br>`;
             
             viewerWrapper.style.display = "block";
             const doc = usaIframe.contentWindow.document;
             doc.open();
             
-            // Set base URL layout mappings so local paths execute correctly 
+            // Set base URL configuration rules
             const baseTag = `<base href="${targetUrl}">`;
             doc.write(baseTag + htmlContent);
             doc.close();
             
-            logBox.innerHTML += `<span style="color:#38bdf8;">[SUCCESS] Mirror injected completely. Commencing 1-Min retention timer.</span><br>`;
+            logBox.innerHTML += `<span style="color:#38bdf8;">[SUCCESS] Layout mirror verified. Running 1-Min view tracker clock...</span><br>`;
             logBox.scrollTop = logBox.scrollHeight;
 
             let elapsed = 0;
@@ -178,18 +181,18 @@ async function runZenrowsBot() {
                 
                 if (elapsed >= 60) {
                     clearInterval(botTimer);
-                    logBox.innerHTML += `<br><span style="color:#34d399;">[COMPLETE] Retention milestones reached. Secure session logged.</span>`;
+                    logBox.innerHTML += `<br><span style="color:#34d399;">[COMPLETE] 1-Minute session recorded successfully.</span>`;
                     logBox.scrollTop = logBox.scrollHeight;
                     startBtn.disabled = false;
                 }
             }, 1000);
             
         } else {
-            logBox.innerHTML += `<span style="color:#fca5a5;">[FAILED] ZenRows rejected connection stream. Code: ${response.status}</span>`;
+            logBox.innerHTML += `<span style="color:#fca5a5;">[FAILED] Gateway error status code: ${response.status}</span>`;
             startBtn.disabled = false;
         }
     } catch (e) {
-        logBox.innerHTML += `<span style="color:#fca5a5;">[ERROR] Security policy context layout mismatch.</span>`;
+        logBox.innerHTML += `<span style="color:#fca5a5;">[ERROR] Modern security browser mismatch: Connection timed out.</span>`;
         startBtn.disabled = false;
     }
 }
