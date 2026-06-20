@@ -3,200 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autonomous Traffic Bot Dashboard</title>
+    <title>Python Connected App</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: #0f172a; 
-            color: #e2e8f0; 
-            padding: 15px; 
-            margin: 0; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden;
         }
-        .container { 
-            background: #1e293b; 
-            padding: 20px; 
-            border-radius: 12px; 
-            max-width: 100%; 
-            box-sizing: border-box; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+        .header {
+            background-color: #11111b;
+            padding: 15px; text-align: center;
+            border-bottom: 2px solid #313244;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 20;
         }
-        h2 { margin-top: 0; color: #f8fafc; font-size: 1.3rem; }
-        label { font-size: 0.85rem; color: #94a3b8; font-weight: bold; display: block; margin-top: 12px; }
+        h3 { margin: 0 0 5px 0; font-size: 16px; }
+        #countdown { color: #f38ba8; font-weight: bold; }
+        .status-text { font-size: 12px; color: #a6e3a1; margin-top: 4px; }
         
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 6px 0 14px 0; 
-            border-radius: 6px; 
-            border: 1px solid #475569; 
-            background: #334155; 
-            color: white; 
-            font-size: 1rem; 
-            box-sizing: border-box; 
+        /* Container area for displaying the website smoothly */
+        .display-container {
+            flex-grow: 1;
+            width: 100%;
+            background-color: #ffffff;
+            border: none;
+            position: relative;
         }
         
-        .status-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-bottom: 15px; 
-        }
-        .status-card { 
-            background: #0f172a; 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #334155; 
-            text-align: center; 
-        }
-        .status-val { font-size: 1.1rem; font-weight: bold; color: #38bdf8; }
-        
-        button { 
-            background: #10b981; 
-            color: white; 
-            border: none; 
-            padding: 14px; 
-            width: 100%; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            font-weight: bold; 
-        }
-        button:active { background: #059669; }
-        button:disabled { background: #64748b; cursor: not-allowed; }
-        
-        .preview-box {
-            margin-top: 15px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #38bdf8;
-            background: #ffffff;
-            display: none; 
-        }
         iframe {
             width: 100%;
-            height: 380px;
+            height: 100%;
             border: none;
+            background-color: #ffffff;
         }
 
-        .log-box { 
-            background: #000; 
-            color: #4ade80; 
-            padding: 12px; 
-            font-family: monospace; 
-            border-radius: 6px; 
-            margin-top: 15px; 
-            height: 110px; 
-            overflow-y: auto; 
-            font-size: 0.8rem; 
-            border: 1px solid #334155; 
+        .overlay-loading {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(30, 30, 46, 0.95);
+            display: flex; justify-content: center; align-items: center;
+            color: #cdd6f4; font-style: italic;
+            z-index: 10;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Autonomous Cloud Traffic Bot</h2>
-    
-    <label>Target Website URL:</label>
-    <input type="text" id="targetUrl" value="https://example.com">
-
-    <label>ZenRows Secret API Key:</label>
-    <input type="text" id="apiKey" placeholder="Paste your zenrows token here">
-    
-    <div class="status-grid">
-        <div class="status-card">
-            <label style="margin:0;">Routing Engine</label>
-            <div class="status-val" style="color: #a855f7;">ZenRows Cloud</div>
-        </div>
-        <div class="status-card">
-            <label style="margin:0;">View Timer</label>
-            <div id="timerVal" class="status-val">0s / 60s</div>
-        </div>
-    </div>
-    
-    <button id="startBtn" onclick="runZenrowsBot()">Launch Premium Proxy Route</button>
-
-    <div class="preview-box" id="viewerWrapper">
-        <iframe id="usaIframe" src=""></iframe>
+    <div class="header">
+        <h3>Connected Bot (Python + HTML)</h3>
+        <div>Forcing Unique IP Rotation in: <span id="countdown">30</span>s</div>
+        <div id="proxyStatus" class="status-text">Status: Starting engine...</div>
     </div>
 
-    <div class="log-box" id="botLogs">System Status: Ready. Paste your token to start...</div>
-</div>
+    <div class="display-container">
+        <div id="loadingOverlay" class="overlay-loading">Python is shifting proxy routes & killing cache memory...</div>
+        
+        <iframe id="webFrame" src="http://127.0.0.1:5000/get_page_with_new_ip?init=1"></iframe>
+    </div>
 
-<script>
-let botTimer = null;
+    <script>
+        const frame = document.getElementById('webFrame');
+        const timerDisplay = document.getElementById('countdown');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const proxyStatus = document.getElementById('proxyStatus');
+        
+        let secondsLeft = 30;
 
-async function runZenrowsBot() {
-    const logBox = document.getElementById('botLogs');
-    const targetUrl = document.getElementById('targetUrl').value;
-    const apiKey = document.getElementById('apiKey').value;
-    const timerDiv = document.getElementById('timerVal');
-    const startBtn = document.getElementById('startBtn');
-    const viewerWrapper = document.getElementById('viewerWrapper');
-    const usaIframe = document.getElementById('usaIframe');
-
-    if (!apiKey) {
-        alert("Please enter your ZenRows API Key first.");
-        return;
-    }
-
-    if (botTimer) clearInterval(botTimer);
-    startBtn.disabled = true;
-
-    logBox.innerHTML = `[ROUTING] Connecting to ZenRows cluster network...<br>`;
-    
-    // Core URL construction
-    const zenrowsEndpoint = `https://api.zenrows.com/v1/?apikey=${apiKey}&url=${encodeURIComponent(targetUrl)}&mode=auto`;
-    
-    // FIX: Bypasses the browser security context block by routing requests via a CORS proxy proxy gateway
-    const bypassGatewayUrl = `https://corsproxy.io/?${encodeURIComponent(zenrowsEndpoint)}`;
-    
-    logBox.innerHTML += `[TUNNEL] Requesting live layout stream via secure proxy bridge...<br>`;
-    
-    try {
-        let response = await fetch(bypassGatewayUrl);
-        if (response.ok) {
-            let htmlContent = await response.text();
+        function reloadFrame() {
+            loadingOverlay.style.display = "flex";
+            proxyStatus.textContent = "Status: Sending cache-breaker request to local server...";
             
-            logBox.innerHTML += `[COMPILING] Bypassed layout block. Rendering code mapping...<br>`;
+            // Generate a random string to force Chrome to completely drop cache memory
+            let cacheBreaker = Math.random().toString(36).substring(2);
             
-            viewerWrapper.style.display = "block";
-            const doc = usaIframe.contentWindow.document;
-            doc.open();
-            
-            // Set base URL configuration rules
-            const baseTag = `<base href="${targetUrl}">`;
-            doc.write(baseTag + htmlContent);
-            doc.close();
-            
-            logBox.innerHTML += `<span style="color:#38bdf8;">[SUCCESS] Layout mirror verified. Running 1-Min view tracker clock...</span><br>`;
-            logBox.scrollTop = logBox.scrollHeight;
-
-            let elapsed = 0;
-            timerDiv.innerText = `0s / 60s`;
-            
-            botTimer = setInterval(() => {
-                elapsed++;
-                timerDiv.innerText = `${elapsed}s / 60s`;
-                
-                if (elapsed >= 60) {
-                    clearInterval(botTimer);
-                    logBox.innerHTML += `<br><span style="color:#34d399;">[COMPLETE] 1-Minute session recorded successfully.</span>`;
-                    logBox.scrollTop = logBox.scrollHeight;
-                    startBtn.disabled = false;
-                }
-            }, 1000);
-            
-        } else {
-            logBox.innerHTML += `<span style="color:#fca5a5;">[FAILED] Gateway error status code: ${response.status}</span>`;
-            startBtn.disabled = false;
+            // Force the frame to load from the Python proxy stream using a unique link variant
+            frame.src = "http://127.0.0.1:5000/get_page_with_new_ip?cb=" + cacheBreaker;
         }
-    } catch (e) {
-        logBox.innerHTML += `<span style="color:#fca5a5;">[ERROR] Modern security browser mismatch: Connection timed out.</span>`;
-        startBtn.disabled = false;
-    }
-}
-</script>
+
+        // Hide overlay once the frame completely finishes rendering data sent by Python
+        frame.onload = function() {
+            loadingOverlay.style.display = "none";
+            proxyStatus.textContent = "Status: Unique IP block loaded and view rendered successfully!";
+        };
+
+        // 30-second loop execution ticker
+        setInterval(() => {
+            secondsLeft--;
+            timerDisplay.textContent = secondsLeft;
+
+            if (secondsLeft <= 0) {
+                secondsLeft = 30;
+                timerDisplay.textContent = secondsLeft;
+                reloadFrame();
+            }
+        }, 1000);
+    </script>
 
 </body>
 </html>
