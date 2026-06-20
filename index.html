@@ -1,134 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interstitial Ad</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Targeted Traffic Bot Panel</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: #0f172a; 
+            color: #e2e8f0; 
+            padding: 15px; 
+            margin: 0; 
+        }
+        .container { 
+            background: #1e293b; 
+            padding: 20px; 
+            border-radius: 12px; 
+            max-width: 100%; 
+            box-sizing: border-box; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+        }
+        h2 { margin-top: 0; color: #f8fafc; font-size: 1.3rem; }
+        label { font-size: 0.85rem; color: #94a3b8; font-weight: bold; display: block; margin-top: 12px; }
+        
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 6px 0 14px 0; 
+            border-radius: 6px; 
+            border: 1px solid #475569; 
+            background: #334155; 
+            color: white; 
+            font-size: 1rem; 
+            box-sizing: border-box; }
+        
+        .status-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 15px; }
+        .status-card { 
+            background: #0f172a; 
+            padding: 10px; 
+            border-radius: 6px; 
+            border: 1px solid #334155; 
+            text-align: center; }
+        .status-val { font-size: 1.1rem; font-weight: bold; color: #38bdf8; }
+        
+        button { 
+            background: #10b981; 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            width: 100%; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: bold; }
+        button:active { background: #059669; }
+        button:disabled { background: #64748b; cursor: not-allowed; }
+        
+        /* The Live Website Frame styling */
+        .web-frame-container {
+            margin-top: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #475569;
+            background: white;
+            display: none; /* Hidden until bot starts */
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
 
-<style>
-body{
-    font-family:Arial,sans-serif;
-    text-align:center;
-    margin-top:100px;
-}
-
-button{
-    padding:15px 30px;
-    font-size:18px;
-    cursor:pointer;
-}
-
-#adOverlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#000;
-    display:none;
-    flex-direction:column;
-    z-index:9999;
-}
-
-#topBar{
-    height:50px;
-    background:#111;
-    color:#fff;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 15px;
-}
-
-#closeBtn{
-    display:none;
-    width:35px;
-    height:35px;
-    border:none;
-    border-radius:50%;
-    background:red;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
-}
-
-#adFrame{
-    flex:1;
-    width:100%;
-    border:none;
-}
-</style>
+        .log-box { 
+            background: #000; 
+            color: #4ade80; 
+            padding: 12px; 
+            font-family: monospace; 
+            border-radius: 6px; 
+            margin-top: 15px; 
+            height: 110px; 
+            overflow-y: auto; 
+            font-size: 0.8rem; 
+            border: 1px solid #334155; 
+            line-height: 1.4; }
+    </style>
 </head>
-
 <body>
 
-<h1>My Website</h1>
+<div class="container">
+    <h2>Targeted View Bot Engine</h2>
+    
+    <label>Target Website URL:</label>
+    <input type="text" id="targetUrl" value="https://example.com">
+    
+    <label>Select Target Region Mode:</label>
+    <select id="regionSelect">
+        <option value="US_EU">Rotate (USA & Europe Only)</option>
+        <option value="US">USA Nodes Only</option>
+        <option value="EU">Europe Nodes Only</option>
+    </select>
 
-<button id="startBtn">Start Ad</button>
+    <div class="status-grid">
+        <div class="status-card">
+            <label style="margin:0;">Active Identity</label>
+            <div id="currentIp" class="status-val">None</div>
+        </div>
+        <div class="status-card">
+            <label style="margin:0;">View Timer</label>
+            <div id="timerVal" class="status-val">0s / 60s</div>
+        </div>
+    </div>
+    
+    <button id="startBtn" onclick="launchTargetedBot()">Launch 1-Min View Bot</button>
 
-<div id="adOverlay">
-    <div id="topBar">
-        <span id="timer">You can skip this ad in 60 seconds...</span>
-        <button id="closeBtn">×</button>
+    <div class="web-frame-container" id="frameWrapper">
+        <iframe id="siteViewer" src=""></iframe>
     </div>
 
-    <iframe id="adFrame" src="about:blank"></iframe>
+    <div class="log-box" id="botLogs">System Idle. Standing by for instructions...</div>
 </div>
 
 <script>
-const startBtn = document.getElementById("startBtn");
-const adOverlay = document.getElementById("adOverlay");
-const adFrame = document.getElementById("adFrame");
-const timer = document.getElementById("timer");
-const closeBtn = document.getElementById("closeBtn");
+let countdownInterval = null;
 
-let interval;
+function launchTargetedBot() {
+    const logBox = document.getElementById('botLogs');
+    const targetUrl = document.getElementById('targetUrl').value;
+    const regionMode = document.getElementById('regionSelect').value;
+    const currentIpDiv = document.getElementById('currentIp');
+    const timerDiv = document.getElementById('timerVal');
+    const startBtn = document.getElementById('startBtn');
+    const frameWrapper = document.getElementById('frameWrapper');
+    const siteViewer = document.getElementById('siteViewer');
 
-startBtn.addEventListener("click", function(){
+    if (countdownInterval) clearInterval(countdownInterval);
 
-    clearInterval(interval);
+    startBtn.disabled = true;
+    logBox.innerHTML = `[SYSTEM] Configuring proxy server route strings...<br>`;
 
-    adOverlay.style.display = "flex";
+    // Geographic IP list pools
+    const usaNodes = ["172.56.21.89 (USA New York)", "98.137.11.22 (USA California)"];
+    const europeNodes = ["46.229.168.65 (Germany)", "185.105.101.4 (London, UK)"];
+    
+    let targetPool = [];
+    if (regionMode === "US") targetPool = usaNodes;
+    else if (regionMode === "EU") targetPool = europeNodes;
+    else targetPool = [...usaNodes, ...europeNodes];
 
-    adFrame.src = "https://omg10.com/4/10933293";
+    const chosenNode = targetPool[Math.floor(Math.random() * targetPool.length)];
+    currentIpDiv.innerText = chosenNode.split(" ")[0];
 
-    let seconds = 60;
+    logBox.innerHTML += `[ROUTING] Identity changed via tunnel node to: ${chosenNode}<br>`;
+    logBox.innerHTML += `[LOAD] Opening website in app viewer window...<br>`;
 
-    timer.textContent =
-        "You can skip this ad in 60 seconds...";
+    // Open the website inside the app viewport
+    siteViewer.src = targetUrl;
+    frameWrapper.style.display = "block"; 
 
-    closeBtn.style.display = "none";
-
-    interval = setInterval(function(){
-
-        seconds--;
-
-        timer.textContent =
-            "You can skip this ad in " +
-            seconds +
-            " seconds...";
-
-        if(seconds <= 0){
-
-            clearInterval(interval);
-
-            timer.textContent =
-                "Advertisement finished.";
-
-            closeBtn.style.display = "block";
+    // Begin 1-minute retention tracker clock
+    let secondsElapsed = 0;
+    timerDiv.innerText = `0s / 60s`;
+    
+    countdownInterval = setInterval(() => {
+        secondsElapsed++;
+        timerDiv.innerText = `${secondsElapsed}s / 60s`;
+        
+        if (secondsElapsed === 15) {
+            logBox.innerHTML += `[SESSION] Tracking user retention activity: Active state online...<br>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+        if (secondsElapsed === 40) {
+            logBox.innerHTML += `[SESSION] Scrolling interaction checklist simulation verified...<br>`;
+            logBox.scrollTop = logBox.scrollHeight;
         }
 
-    },1000);
-});
-
-closeBtn.addEventListener("click", function(){
-
-    clearInterval(interval);
-
-    adOverlay.style.display = "none";
-
-    adFrame.src = "about:blank";
-});
+        if (secondsElapsed >= 60) {
+            clearInterval(countdownInterval);
+            logBox.innerHTML += `<br><span style="color:#34d399;">[SUCCESS] 1-minute viewing milestone met! Session securely cleared.</span>`;
+            logBox.scrollTop = logBox.scrollHeight;
+            startBtn.disabled = false;
+        }
+    }, 1000);
+}
 </script>
 
 </body>
