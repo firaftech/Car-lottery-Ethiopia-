@@ -1,163 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ad Overlay Example (Fixed)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interstitial Ad</title>
 
-        .main-container {
-            text-align: center;
-        }
+<style>
+body{
+    font-family:Arial,sans-serif;
+    text-align:center;
+    margin-top:100px;
+}
 
-        .start-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background 0.2s;
-        }
+button{
+    padding:15px 30px;
+    font-size:18px;
+    cursor:pointer;
+}
 
-        .start-btn:hover {
-            background-color: #0056b3;
-        }
+#adOverlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    display:none;
+    flex-direction:column;
+    z-index:9999;
+}
 
-        /* Full-screen Ad Overlay */
-        .ad-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
-            display: none; 
-            flex-direction: column;
-        }
+#topBar{
+    height:50px;
+    background:#111;
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 15px;
+}
 
-        /* Top bar holding timer and close button */
-        .ad-top-bar {
-            background-color: #111;
-            color: white;
-            height: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+#closeBtn{
+    display:none;
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:50%;
+    background:red;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
 
-        .timer-text {
-            color: #ccc;
-        }
-
-        .close-btn {
-            background-color: #ff3333;
-            color: white;
-            border: none;
-            font-size: 20px;
-            font-weight: bold;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none; /* Hidden until 30s pass */
-            justify-content: center;
-            align-items: center;
-            line-height: 1;
-        }
-
-        .close-btn:hover {
-            background-color: #cc0000;
-        }
-
-        .ad-frame-container {
-            flex-grow: 1;
-            width: 100%;
-            background-color: #fff;
-        }
-
-        .ad-frame-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+#adFrame{
+    flex:1;
+    width:100%;
+    border:none;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="main-container">
-        <h1>Welcome to My Website</h1>
-        <p>Click the button below to trigger the fixed interstitial ad screen.</p>
-        <button class="start-btn" id="startAdBtn">Start Ad</button>
+<h1>My Website</h1>
+
+<button id="startBtn">Start Ad</button>
+
+<div id="adOverlay">
+    <div id="topBar">
+        <span id="timer">You can skip this ad in 60 seconds...</span>
+        <button id="closeBtn">×</button>
     </div>
 
-    <div class="ad-overlay" id="adOverlay">
-        <div class="ad-top-bar">
-            <span class="timer-text" id="timerText">You can skip this ad in 30 seconds...</span>
-            <button class="close-btn" id="closeAdBtn" title="Close Advertisement">×</button>
-        </div>
-        <div class="ad-frame-container">
-            <iframe id="adIframe" src=""></iframe>
-        </div>
-    </div>
+    <iframe id="adFrame" src="about:blank"></iframe>
+</div>
 
-    <script>
-        const startAdBtn = document.getElementById('startAdBtn');
-        const adOverlay = document.getElementById('adOverlay');
-        const adIframe = document.getElementById('adIframe');
-        const timerText = document.getElementById('timerText');
-        const closeAdBtn = document.getElementById('closeAdBtn');
+<script>
+const startBtn = document.getElementById("startBtn");
+const adOverlay = document.getElementById("adOverlay");
+const adFrame = document.getElementById("adFrame");
+const timer = document.getElementById("timer");
+const closeBtn = document.getElementById("closeBtn");
 
-        const originalUrl = "https://omg10.com/4/10851265";
-        
-        // Fix: Route through an allorigins proxy wrapper to completely strip the frame-blocking headers
-        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(originalUrl);
-        
-        let countdown;
+let interval;
 
-        startAdBtn.addEventListener('click', () => {
-            // Load the proxy-patched URL into the iframe
-            adIframe.src = proxyUrl;
-            
-            adOverlay.style.display = 'flex';
-            
-            let secondsLeft = 30;
-            timerText.textContent = `You can skip this ad in ${secondsLeft} seconds...`;
-            closeAdBtn.style.display = 'none';
+startBtn.addEventListener("click", function(){
 
-            countdown = setInterval(() => {
-                secondsLeft--;
-                if (secondsLeft > 0) {
-                    timerText.textContent = `You can skip this ad in ${secondsLeft} seconds...`;
-                } else {
-                    clearInterval(countdown);
-                    timerText.textContent = "Advertisement finished.";
-                    closeAdBtn.style.display = 'flex';
-                }
-            }, 1000);
-        });
+    clearInterval(interval);
 
-        closeAdBtn.addEventListener('click', () => {
-            adOverlay.style.display = 'none';
-            adIframe.src = ""; // Shut down frame processes completely
-        });
-    </script>
+    adOverlay.style.display = "flex";
+
+    adFrame.src = "https://omg10.com/4/10933293";
+
+    let seconds = 60;
+
+    timer.textContent =
+        "You can skip this ad in 60 seconds...";
+
+    closeBtn.style.display = "none";
+
+    interval = setInterval(function(){
+
+        seconds--;
+
+        timer.textContent =
+            "You can skip this ad in " +
+            seconds +
+            " seconds...";
+
+        if(seconds <= 0){
+
+            clearInterval(interval);
+
+            timer.textContent =
+                "Advertisement finished.";
+
+            closeBtn.style.display = "block";
+        }
+
+    },1000);
+});
+
+closeBtn.addEventListener("click", function(){
+
+    clearInterval(interval);
+
+    adOverlay.style.display = "none";
+
+    adFrame.src = "about:blank";
+});
+</script>
+
 </body>
 </html>
