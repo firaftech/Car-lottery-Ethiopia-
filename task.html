@@ -767,19 +767,44 @@
             );
         }
 
-        // Real functional invitation tracking URL generator setup (FIXED)
+        // Functional hybrid clipboard copier setup (FIXED for Webviews/APK environments)
+        function secureCopy(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                return new Promise((resolve, reject) => {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = text;
+                    tempInput.style.position = 'fixed'; 
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    try {
+                        const success = document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        if (success) resolve(); else reject();
+                    } catch (err) {
+                        document.body.removeChild(tempInput);
+                        reject(err);
+                    }
+                });
+            }
+        }
+
+        // Functional invitation tracking URL generator setup (FIXED)
         document.getElementById('shareBtn').addEventListener('click', () => {
             // 1. Force phone sanitation down to its raw last 9 digits to align flawlessly with registration search schema
             const cleanRefPhone = activeUserPhone.replace(/\D/g, '').slice(-9);
             
-            // 2. Safely derive absolute routing directory paths using standard window base URL splits, preventing 404s inside subdirectories
-            const baseUri = window.location.href.split('?')[0];
-            const registrationLink = new URL('register.html', baseUri).href + "?ref=" + cleanRefPhone;
+            // 2. Safe replacement strategy ensuring seamless base parameters without sub-folder 404 mutations
+            const clearPathUrl = window.location.href.split('?')[0];
+            const registrationLink = clearPathUrl.replace('task.html', 'register.html') + "?ref=" + cleanRefPhone;
             
-            navigator.clipboard.writeText(registrationLink).then(() => {
+            secureCopy(registrationLink).then(() => {
                 const toast = document.getElementById('toast');
                 toast.style.display = 'block';
                 setTimeout(() => { toast.style.display = 'none'; }, 2000);
+            }).catch(err => {
+                console.error("Copy action failed: ", err);
             });
         });
     </script>

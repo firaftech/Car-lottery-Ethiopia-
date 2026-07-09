@@ -228,8 +228,8 @@
         </div>
 
         <div class="action-area">
-            <!-- Target registration node button -->
-            <a href="created.html" id="createAccountBtn" class="btn btn-primary">Create Account</a>
+            <!-- Target registration node button (FIXED to point to register.html) -->
+            <a href="register.html" id="createAccountBtn" class="btn btn-primary">Create Account</a>
             
             <a href="login.html" class="btn btn-secondary">Log In</a>
             
@@ -247,11 +247,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref');
 
-            // If a referral token exists, append it seamlessly to the Sign-up link
+            // If a referral token exists, append it seamlessly to the Sign-up link (FIXED to register.html)
             if (refParam) {
                 const createBtn = document.getElementById('createAccountBtn');
                 if (createBtn) {
-                    createBtn.href = `created.html?ref=${encodeURIComponent(refParam.trim())}`;
+                    createBtn.href = `register.html?ref=${encodeURIComponent(refParam.trim())}`;
                 }
             }
         });
