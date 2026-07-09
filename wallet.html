@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BirrGo - Premium Wallet</title>
+    <!-- Premium, modern tech typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-burgundy: #800020;
+            --primary-gradient: linear-gradient(135deg, #9b0026 0%, #4a0000 100%);
+            --accent-glow: rgba(128, 0, 32, 0.15);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --bg-light: #f8fafc;
+            --border-light: #e2e8f0;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --success-green: #10b981;
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background-color: #f1f5f9;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-view {
+            width: 100%;
+            height: 100dvh;
+            max-width: 450px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bg-light);
+            padding: calc(16px + env(safe-area-inset-top)) 20px calc(95px + env(safe-area-inset-bottom)) 20px;
+            scrollbar-width: none;
+        }
+        .app-content::-webkit-scrollbar { display: none; }
+
+        /* Premium Header Styling */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding: 4px 2px;
+        }
+
+        .logo-image {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            letter-spacing: -0.6px;
+        }
+
+        /* High-End Digital Card Visual */
+        .digital-card {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius-lg);
+            padding: 24px;
+            color: #ffffff;
+            box-shadow: 0 20px 35px -8px rgba(128, 0, 32, 0.3);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .digital-card::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-chip {
+            width: 42px;
+            height: 32px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .card-type {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .card-number {
+            font-size: 18px;
+            font-weight: 600;
+            font-family: monospace;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-holder-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+        }
+
+        .card-holder-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Asset Breakdown Stack */
+        .section-heading {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            letter-spacing: -0.4px;
+            margin-top: 10px;
+        }
+
+        .asset-stack, .history-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .asset-card, .history-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            padding: 16px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--card-shadow);
+        }
+
+        .asset-left, .history-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .asset-img-box, .history-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fdf2f4;
+        }
+
+        .asset-img-box img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        .asset-icon-fallback, .history-icon-box {
+            font-size: 20px;
+            background-color: #f1f5f9;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .asset-info h4, .history-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .asset-info p, .history-info p {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .asset-right, .history-right {
+            text-align: right;
+        }
+
+        .asset-amount, .history-amount {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .asset-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--success-green);
+        }
+
+        /* Specialized Real-Time Transaction Log Colors */
+        .history-amount.income {
+            color: var(--success-green);
+        }
+
+        .history-amount.expense {
+            color: var(--primary-burgundy);
+        }
+
+        /* Large Action Controls */
+        .wallet-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .btn-wallet-action {
+            height: 54px;
+            border-radius: var(--border-radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-wallet-action.primary {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 8px 20px rgba(128, 0, 32, 0.2);
+        }
+
+        .btn-wallet-action.secondary {
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+        }
+
+        .btn-wallet-action:active {
+            transform: scale(0.97);
+        }
+
+        /* Navigation Layout Bar */
+        .bottom-nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: calc(68px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 4px;
+            flex: 1;
+            height: 100%;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active-tab {
+            color: var(--primary-burgundy);
+        }
+        
+        .nav-item.active-tab .tab-icon-wrapper {
+            background-color: #fdf2f4;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: -2px;
+        }
+        .nav-item.active-tab svg {
+            stroke: var(--primary-burgundy);
+            stroke-width: 2.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-view">
+        
+        <div class="app-content">
+            
+            <!-- Logo Header -->
+            <div class="brand-header">
+                <img class="logo-image" src="birrgo-logo.png" alt="BirrGo Logo">
+            </div>
+
+            <h1 class="page-title">Wallet Ledger</h1>
+
+            <!-- Premium Financial Asset Card Layout -->
+            <div class="digital-card">
+                <div class="card-top">
+                    <div class="card-chip"></div>
+                    <div class="card-type" id="wallet-card-identity">Elite User</div>
+                </div>
+                
+                <div class="card-number">•••• •••• •••• 2415</div>
+                
+                <div class="card-bottom">
+                    <div>
+                        <div class="card-holder-label">Total Balance</div>
+                        <div class="card-holder-name" id="wallet-total-balance">0.00 Birr</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="card-holder-label">Status</div>
+                        <div class="card-holder-name" style="font-size: 12px; text-transform: uppercase;">Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Tools Controls -->
+            <div class="wallet-actions">
+                <button class="btn-wallet-action primary" onclick="alert('Deposit gateway launching...')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                    Deposit
+                </button>
+                <button class="btn-wallet-action secondary" onclick="alert('Withdraw handling terminal opening...')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                    Withdraw
+                </button>
+            </div>
+
+            <!-- Asset Breakdown Allocation Segment -->
+            <h2 class="section-heading">Asset Balances</h2>
+            <div class="asset-stack">
+                
+                <!-- Dynamic Asset Category 1 (Integrated Task Rewards Layout) -->
+                <div class="asset-card">
+                    <div class="asset-left">
+                        <div class="asset-img-box">
+                            <img src="33164.png" alt="Birr Matrix Icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/7152/7152349.png'">
+                        </div>
+                        <div class="asset-info">
+                            <h4>Task Video Balance</h4>
+                            <p>Accumulated media profits</p>
+                        </div>
+                    </div>
+                    <div class="asset-right">
+                        <div class="asset-amount" id="task-sub-balance">0.00 Br</div>
+                        <div class="asset-status">Withdrawable</div>
+                    </div>
+                </div>
+
+                <!-- Asset Category 2 -->
+                <div class="asset-card">
+                    <div class="asset-left">
+                        <div class="asset-icon-fallback">💵</div>
+                        <div class="asset-info">
+                            <h4>Core Deposit Vault</h4>
+                            <p>Direct funding allocations</p>
+                        </div>
+                    </div>
+                    <div class="asset-right">
+                        <div class="asset-amount" id="vault-sub-balance">0.00 Br</div>
+                        <div class="asset-status">Liquid</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Live Transaction History Visual Interface Feed -->
+            <h2 class="section-heading">Transaction History</h2>
+            <div class="history-stack" id="transaction-history-container">
+                <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
+                    Streaming system history...
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sticky Persistent Premium Navigation Frame -->
+        <nav class="bottom-nav-bar">
+            <a href="dashboard.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Hub
+            </a>
+            <a href="task.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Tasks
+            </a>
+            <a href="lottery.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Lottery
+            </a>
+            <a href="#" class="nav-item active-tab">
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                </div>
+                Wallet
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- Modular Real-Time Sync Pipeline Script Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Global Firebase Configuration Mapping Matrix
+        const firebaseConfig = {
+            apiKey: "AIzaSyCRHoIZf1ZPR9m3YYTv-I9CfwyGqsSOMWo",
+            authDomain: "birrgo-fdf7e.firebaseapp.com",
+            databaseURL: "https://birrgo-fdf7e-default-rtdb.firebaseio.com",
+            projectId: "birrgo-fdf7e",
+            storageBucket: "birrgo-fdf7e.firebasestorage.app",
+            messagingSenderId: "2317445154",
+            appId: "1:2317445154:web:4275cbb0f46b28f64f827b",
+            measurementId: "G-24X13TZ43D"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let activeUserPhone = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            activeUserPhone = localStorage.getItem('auth_session_phone');
+            if (!activeUserPhone) {
+                activeUserPhone = "demo_guest_user";
+                localStorage.setItem('auth_session_phone', activeUserPhone);
+            }
+
+            document.getElementById('wallet-card-identity').innerText = `+${activeUserPhone.substring(0, 7)}...`;
+            
+            startLiveWalletListeners();
+        });
+
+        function startLiveWalletListeners() {
+            // 1. Listen to Master Balance Node
+            const balanceRef = ref(db, `users/${activeUserPhone}/walletBalance`);
+            onValue(balanceRef, (snapshot) => {
+                const balanceVal = snapshot.val();
+                const numericTotal = balanceVal !== null ? parseFloat(balanceVal) : 0.00;
+                
+                document.getElementById('wallet-total-balance').innerText = `${numericTotal.toFixed(2)} Birr`;
+                
+                // For demonstration allocation breakdown UI matching design mechanics:
+                // We split the visual card values to fill sub-pools dynamically
+                if(numericTotal > 110) {
+                    document.getElementById('vault-sub-balance').innerText = "110.00 Br";
+                    document.getElementById('task-sub-balance').innerText = `${(numericTotal - 110).toFixed(2)} Br`;
+                } else {
+                    document.getElementById('vault-sub-balance').innerText = `${numericTotal.toFixed(2)} Br`;
+                    document.getElementById('task-sub-balance').innerText = "0.00 Br";
+                }
+            });
+
+            // 2. Real-Time Transaction Log Parser Stream
+            const historyRef = ref(db, `users/${activeUserPhone}/transactions`);
+            const historyContainer = document.getElementById('transaction-history-container');
+
+            onValue(historyRef, (snapshot) => {
+                const data = snapshot.val();
+                historyContainer.innerHTML = ''; // Wipe loading placeholder entries
+
+                if (!data) {
+                    historyContainer.innerHTML = `
+                        <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px;">
+                            No account activity tracked yet. Complete a task video to see it pop here!
+                        </div>`;
+                    return;
+                }
+
+                // Map objects array structure into structural reverse chronologic arrays
+                const transactionList = Object.keys(data).map(key => data[key]);
+                transactionList.reverse(); // Forces new items to view first at top
+
+                transactionList.forEach(tx => {
+                    const cardRow = document.createElement('div');
+                    cardRow.className = 'history-card';
+
+                    // Parse type metrics for icons & explicit math operators
+                    const isIncome = tx.type === 'income' || tx.amount > 0;
+                    const visualSymbol = isIncome ? '⚡' : '🎟️';
+                    const stylingClass = isIncome ? 'income' : 'expense';
+                    const prefixMathSign = isIncome ? '+' : '-';
+
+                    cardRow.innerHTML = `
+                        <div class="history-left">
+                            <div class="history-icon-box">${visualSymbol}</div>
+                            <div class="history-info">
+                                <h4>${tx.title || 'Wallet Activity'}</h4>
+                                <p>${tx.timestamp || 'Just now'}</p>
+                            </div>
+                        </div>
+                        <div class="history-right">
+                            <div class="history-amount ${stylingClass}">
+                                ${prefixMathSign}${Math.abs(tx.amount).toFixed(2)} Br
+                            </div>
+                        </div>
+                    `;
+                    historyContainer.appendChild(cardRow);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

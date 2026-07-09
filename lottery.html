@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BirrGo - Premium Lottery</title>
+    <!-- Premium, modern tech typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-burgundy: #800020;
+            --primary-gradient: linear-gradient(135deg, #9b0026 0%, #4a0000 100%);
+            --accent-glow: rgba(128, 0, 32, 0.15);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --bg-light: #f8fafc;
+            --border-light: #e2e8f0;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background-color: #f1f5f9;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-view {
+            width: 100%;
+            height: 100dvh;
+            max-width: 450px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bg-light);
+            padding: calc(16px + env(safe-area-inset-top)) 20px calc(95px + env(safe-area-inset-bottom)) 20px;
+            scrollbar-width: none;
+        }
+        .app-content::-webkit-scrollbar { display: none; }
+
+        /* Premium Header Styling */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding: 4px 2px;
+        }
+
+        .logo-image {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            letter-spacing: -0.6px;
+        }
+
+        .section-heading {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            letter-spacing: -0.4px;
+        }
+
+        /* Carousel Row for Premium Showcases */
+        .featured-scroll-row {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            scrollbar-width: none;
+            snap-type: x mandatory;
+        }
+        .featured-scroll-row::-webkit-scrollbar { display: none; }
+
+        /* Premium Showcase Cards */
+        .featured-card {
+            flex: 0 0 88%;
+            snap-align: start;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            color: #ffffff;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 150px;
+            background-color: #0f172a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .badge-premium {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: linear-gradient(90deg, #ffd700, #ffa500);
+            color: #000000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            z-index: 2;
+        }
+
+        .featured-card-body {
+            padding: 18px;
+        }
+
+        .featured-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .featured-meta {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .featured-meta span {
+            color: #ffd700;
+            font-weight: 700;
+        }
+
+        .card-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .countdown-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Stacked Secondary Core Items List */
+        .active-list-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .list-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            padding: 16px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.15s ease;
+        }
+
+        .list-item-card:active {
+            transform: scale(0.99);
+        }
+
+        .list-item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .list-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .list-item-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .list-item-info p {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .btn-buy-mini {
+            background: var(--primary-burgundy);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px var(--accent-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-buy-mini:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        /* Lower Fast Actions Utility Section */
+        .global-action-area {
+            display: flex;
+            gap: 14px;
+            margin-top: 5px;
+        }
+
+        .btn-action-outline {
+            flex: 1;
+            height: 52px;
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-filled {
+            flex: 1.3;
+            height: 52px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(128, 0, 32, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-outline:active,
+        .btn-action-filled:active {
+            transform: scale(0.97);
+        }
+
+        /* Fixed Navigation Framework */
+        .bottom-nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: calc(68px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 4px;
+            flex: 1;
+            height: 100%;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active-tab {
+            color: var(--primary-burgundy);
+        }
+        
+        .nav-item.active-tab .tab-icon-wrapper {
+            background-color: #fdf2f4;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: -2px;
+        }
+        .nav-item.active-tab svg {
+            stroke: var(--primary-burgundy);
+            stroke-width: 2.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-view">
+        
+        <div class="app-content">
+            
+            <!-- Logo Header -->
+            <div class="brand-header">
+                <img class="logo-image" src="birrgo-logo.png" alt="BirrGo Logo">
+            </div>
+
+            <h1 class="page-title">Lottery</h1>
+
+            <!-- Premium Dynamic Featured Carousels -->
+            <h2 class="section-heading">Upcoming Lotteries</h2>
+            <div class="featured-scroll-row">
+                
+                <!-- Premium Entry 1 -->
+                <div class="featured-card">
+                    <span class="badge-premium">Grand Raffle</span>
+                    <div class="card-img-wrapper">
+                        <img src="33111.jpg" alt="Jetour Dashing Car">
+                    </div>
+                    <div class="featured-card-body">
+                        <h3 class="featured-title">Jetour Dashing Car Raffle</h3>
+                        <p class="featured-meta">Ticket Price: <span>5,000 Birr</span><br>Grand Prize: Brand New Luxury Jetour SUV</p>
+                        <div class="card-footer-row">
+                            <span class="countdown-pill">⏳ Closes in 2D 5H</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Entry 2 -->
+                <div class="featured-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+                    <span class="badge-premium" style="background: var(--success-green); color: #fff;">Monthly</span>
+                    <div class="card-img-wrapper" style="background: rgba(255,255,255,0.03); font-size: 42px;">🏦</div>
+                    <div class="featured-card-body">
+                        <h3 class="featured-title">Monthly BirrDraw</h3>
+                        <p class="featured-meta">Ticket Price: <span>10 Birr</span><br>Jackpot: 1,000,000 Birr Cash</p>
+                        <div class="card-footer-row">
+                            <span class="countdown-pill">⏳ Closes in 1D 5H</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Active Standard Ledger Rows -->
+            <h2 class="section-heading">Active Lotteries</h2>
+            <div class="active-list-stack">
+                
+                <div class="list-item-card">
+                    <div class="list-item-left">
+                        <div class="list-icon-box" style="background-color: #fdf2f4; color: var(--primary-burgundy);">🔒</div>
+                        <div class="list-item-info">
+                            <h4>SafeSaver Lottery</h4>
+                            <p>Draws every Friday<br>Jackpot: 50,000 Birr | Ticket: 10 Birr</p>
+                        </div>
+                    </div>
+                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
+                </div>
+
+                <div class="list-item-card">
+                    <div class="list-item-left">
+                        <div class="list-icon-box" style="background-color: #f0f4f8; color: #0d3b66;">💸</div>
+                        <div class="list-item-info">
+                            <h4>Instant Cash Draw</h4>
+                            <p>Draws every 3 hours<br>Jackpot: 2,000 Birr | Ticket: 1 Birr</p>
+                        </div>
+                    </div>
+                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
+                </div>
+
+                <div class="list-item-card">
+                    <div class="list-item-left">
+                        <div class="list-icon-box" style="background-color: #fcf6f0; color: #e65100;">🎁</div>
+                        <div class="list-item-info">
+                            <h4>Gadget Surprise</h4>
+                            <p>Next Draw: iPhone 15<br>Ticket: 5 Birr</p>
+                        </div>
+                    </div>
+                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
+                </div>
+
+            </div>
+
+            <!-- Master Action Group -->
+            <div class="global-action-area">
+                <button class="btn-action-outline" onclick="alert('Loading entries archive...')">My Tickets</button>
+                <button class="btn-action-filled" onclick="alert('Instant ticket engine pooling...')">Quick Buy</button>
+            </div>
+        </div>
+
+        <!-- Sticky Persistent Premium Navigation Frame -->
+        <nav class="bottom-nav-bar">
+            <a href="dashboard.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Hub
+            </a>
+            <a href="task.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Tasks
+            </a>
+            <a href="#" class="nav-item active-tab">
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+                Lottery
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                Wallet
+            </a>
+        </nav>
+
+    </div>
+
+</body>
+</html>
