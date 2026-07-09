@@ -555,7 +555,6 @@
     <!-- Modular Firebase Application Environment Pipeline -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // Added 'push' and 'set' to generate transaction lists automatically
         import { getDatabase, ref, get, runTransaction, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -768,10 +767,14 @@
             );
         }
 
-        // Real functional invitation tracking URL generator setup
+        // Real functional invitation tracking URL generator setup (FIXED)
         document.getElementById('shareBtn').addEventListener('click', () => {
-            // Uses current browser origin and paths straight to registration page with ref payload parameter
-            const registrationLink = window.location.origin + "/register.html?ref=" + activeUserPhone;
+            // 1. Force phone sanitation down to its raw last 9 digits to align flawlessly with registration search schema
+            const cleanRefPhone = activeUserPhone.replace(/\D/g, '').slice(-9);
+            
+            // 2. Safely derive absolute routing directory paths using standard window base URL splits, preventing 404s inside subdirectories
+            const baseUri = window.location.href.split('?')[0];
+            const registrationLink = new URL('register.html', baseUri).href + "?ref=" + cleanRefPhone;
             
             navigator.clipboard.writeText(registrationLink).then(() => {
                 const toast = document.getElementById('toast');

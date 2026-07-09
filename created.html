@@ -314,7 +314,7 @@
 
         <div class="header-content">
             <h1>Create Your Account</h1>
-            <p>Enter your details to get started with BirrGo.</p>
+            <p id="referrer-label">Enter your details to get started with BirrGo.</p>
         </div>
 
         <div class="step-indicator">
@@ -348,7 +348,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="input-helper-text">Enter 9 digits (e.g., 912345678). You'll receive an OTP.</p>
+                <p class="input-helper-text">Enter 9 digits (e.g., 912345678).</p>
             </div>
 
             <!-- Full Name Frame -->
@@ -401,10 +401,8 @@
     <!-- Firebase System Logic Initialization Pipeline -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // Added runTransaction and push to safely execute referral bonuses
         import { getDatabase, ref, get, set, runTransaction, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Verified Native App Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCRHoIZf1ZPR9m3YYTv-I9CfwyGqsSOMWo",
             authDomain: "birrgo-fdf7e.firebaseapp.com",
@@ -416,11 +414,20 @@
             measurementId: "G-24X13TZ43D"
         };
 
-        // Initialize Native Instances
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Toast Helper
+        // Capture referral ID instantly from URL parameters
+        let referrerPhone = "";
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref');
+            if (refParam) {
+                referrerPhone = refParam.trim().replace(/^0+/, '').replace(/^\+251/, '');
+                document.getElementById('referrer-label').innerHTML = `Invited by: <span style="color:var(--primary-burgundy);font-weight:700;">+251${referrerPhone}</span>`;
+            }
+        });
+
         function showNotification(message, isSuccess = false) {
             const toast = document.getElementById('toast-message');
             toast.innerText = message;
@@ -429,7 +436,6 @@
             setTimeout(() => { toast.style.display = 'none'; }, 3500);
         }
 
-        // Intercept Form Submission Lifecycle
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -439,10 +445,8 @@
             const pin = document.getElementById('regPin').value;
             const confirmPin = document.getElementById('regConfirmPin').value;
 
-            // Normalize and clean phone numbers (remove leading zero if entered)
             let cleanPhone = rawPhone.replace(/^0+/, '');
             
-            // Validation Validations
             if (!/^[79][0-9]{8}$/.test(cleanPhone)) {
                 showNotification("Please enter a valid Ethiopian phone sequence.");
                 return;
@@ -463,11 +467,9 @@
             const formatGlobalPhone = "+251" + cleanPhone;
 
             try {
-                // UI State Lock
                 submitBtn.disabled = true;
                 submitBtn.innerText = "Checking Availability...";
 
-                // Path-Check Node to block duplicated accounts
                 const userSnapshot = await get(ref(db, 'users/' + cleanPhone));
 
                 if (userSnapshot.exists()) {
@@ -479,43 +481,31 @@
 
                 submitBtn.innerText = "Saving Profile...";
 
-                // Core user node creation mapping payload
                 const userPayload = {
                     phoneNumber: formatGlobalPhone,
                     localPhoneRef: cleanPhone,
                     fullName: fullName,
-                    securityPin: pin, // Stored safely for subsequent log-in validation
+                    securityPin: pin,
                     walletBalance: 0.00,
                     createdAt: new Date().toISOString()
                 };
 
-                // Push atomic write payload to Realtime Database directory
                 await set(ref(db, 'users/' + cleanPhone), userPayload);
 
-                // --- INTEGRATED REAL-TIME REFERRAL PAYOUT MODULE ---
-                const urlParams = new URLSearchParams(window.location.search);
-                const referrerPhone = urlParams.get('ref');
-
-                // Ensure the referrer phone exists, and prevent users from referring themselves
-                if (referrerPhone && referrerPhone.trim() !== "" && referrerPhone.trim() !== cleanPhone) {
-                    // Clean formatting to ensure compatibility with keys in your database setup
-                    const cleanReferrer = referrerPhone.trim().replace(/^0+/, '').replace(/^\+251/, '');
+                // Process Invite Payout safely if referral parameter exists
+                if (referrerPhone && referrerPhone !== cleanPhone) {
+                    const inviterBalanceRef = ref(db, `users/${referrerPhone}/walletBalance`);
+                    const inviterTxRef = ref(db, `users/${referrerPhone}/transactions`);
                     
-                    // Generate a premium random payout amount between 5 and 20 Birr
                     const randomBonus = Math.floor(Math.random() * 16) + 5; 
 
-                    const inviterBalanceRef = ref(db, `users/${cleanReferrer}/walletBalance`);
-                    const inviterTxRef = ref(db, `users/${cleanReferrer}/transactions`);
-
                     try {
-                        // 1. Atomically add the cash drop bonus directly to the inviter's wallet balance
                         await runTransaction(inviterBalanceRef, (currentBalance) => {
                             let parsedBalance = parseFloat(currentBalance);
                             if (isNaN(parsedBalance)) parsedBalance = 0;
                             return parsedBalance + randomBonus;
                         });
 
-                        // 2. Append a clean tracking ledger record to ensure visibility inside wallet.html
                         const newTxNode = push(inviterTxRef);
                         await set(newTxNode, {
                             title: "Referral Bonus (New Signup)",
@@ -523,26 +513,22 @@
                             type: "income",
                             timestamp: new Date().toLocaleString()
                         });
-                        console.log(`Referral processed: +${randomBonus} Birr awarded to inviter ${cleanReferrer}`);
                     } catch (referralError) {
-                        // Wrapped inside its own block so referral drops do not break registration if the link was corrupted
-                        console.error("Referral asset processing dropped: ", referralError);
+                        console.error("Referral processing error: ", referralError);
                     }
                 }
-                // ----------------------------------------------------
 
                 showNotification("Account created successfully!", true);
-                
-                // Track standard registration locally if required
                 localStorage.setItem('auth_session_phone', cleanPhone);
 
                 setTimeout(() => {
-                    window.location.href = "dashboard.html";
+                    // Redirects cleanly to task.html for live testing
+                    window.location.href = "task.html"; 
                 }, 1500);
 
             } catch (error) {
                 console.error("Database Write Latency Error: ", error);
-                showNotification("Connection lost. Please check your data or try again.");
+                showNotification("Connection lost. Please check your data.");
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Verify & Create Account";
             }

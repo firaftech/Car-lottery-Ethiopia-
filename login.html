@@ -326,7 +326,8 @@
         </form>
 
         <div class="signup-redirect-footer">
-            New to BirrGo? <a href="register.html">Create Account</a>
+            <!-- Fixed redirection destination pointer to match created.html structural filename -->
+            New to BirrGo? <a href="created.html">Create Account</a>
         </div>
 
     </div>
@@ -405,7 +406,8 @@
                     submitBtn.innerText = "Redirecting Securely...";
                     
                     setTimeout(() => {
-                        window.location.href = "dashboard.html";
+                        // Fixed redirect target path pointer to open task dashboard view
+                        window.location.href = "task.html";
                     }, 1000);
                 } else {
                     showNotification("Incorrect security PIN profile entry.");
