@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BirrGo - Premium Lottery</title>
-    <!-- Premium, modern tech typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -21,6 +20,7 @@
             --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
             --success-green: #10b981;
             --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
             --border-radius-lg: 24px;
             --border-radius-md: 16px;
         }
@@ -56,6 +56,7 @@
             flex-direction: column;
             position: relative;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
         .app-content {
@@ -67,7 +68,6 @@
         }
         .app-content::-webkit-scrollbar { display: none; }
 
-        /* Premium Header Styling */
         .brand-header {
             display: flex;
             align-items: center;
@@ -98,7 +98,6 @@
             letter-spacing: -0.4px;
         }
 
-        /* Carousel Row for Premium Showcases */
         .featured-scroll-row {
             display: flex;
             gap: 16px;
@@ -110,17 +109,22 @@
         }
         .featured-scroll-row::-webkit-scrollbar { display: none; }
 
-        /* Premium Showcase Cards */
         .featured-card {
             flex: 0 0 88%;
             snap-align: start;
             border-radius: var(--border-radius-lg);
             overflow: hidden;
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            background: var(--primary-gradient);
             color: #ffffff;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 35px -8px rgba(128, 0, 32, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .featured-card:active {
+            transform: scale(0.98);
         }
 
         .card-img-wrapper {
@@ -169,7 +173,7 @@
 
         .featured-meta {
             font-size: 13px;
-            color: #94a3b8;
+            color: rgba(255, 255, 255, 0.75);
             margin-bottom: 14px;
             line-height: 1.5;
         }
@@ -186,7 +190,7 @@
         }
 
         .countdown-pill {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             padding: 6px 12px;
@@ -199,7 +203,6 @@
             gap: 4px;
         }
 
-        /* Stacked Secondary Core Items List */
         .active-list-stack {
             display: flex;
             flex-direction: column;
@@ -254,7 +257,7 @@
         }
 
         .btn-buy-mini {
-            background: var(--primary-burgundy);
+            background: var(--primary-gradient);
             color: #ffffff;
             border: none;
             padding: 8px 16px;
@@ -266,12 +269,6 @@
             transition: all 0.2s ease;
         }
 
-        .btn-buy-mini:active {
-            transform: scale(0.95);
-            opacity: 0.9;
-        }
-
-        /* Lower Fast Actions Utility Section */
         .global-action-area {
             display: flex;
             gap: 14px;
@@ -289,7 +286,6 @@
             font-size: 15px;
             cursor: pointer;
             box-shadow: var(--card-shadow);
-            transition: all 0.2s ease;
         }
 
         .btn-action-filled {
@@ -303,12 +299,6 @@
             font-size: 15px;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(128, 0, 32, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .btn-action-outline:active,
-        .btn-action-filled:active {
-            transform: scale(0.97);
         }
 
         /* Fixed Navigation Framework */
@@ -368,6 +358,99 @@
             stroke: var(--primary-burgundy);
             stroke-width: 2.4;
         }
+
+        /* PREMIUM BOTTOM SHEET FOR ERRORS (No Popups!) */
+        .ui-sheet-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 5000;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .ui-sheet-backdrop.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .ui-bottom-sheet {
+            background: #ffffff;
+            width: 100%;
+            max-width: 360px;
+            border-radius: var(--border-radius-lg);
+            padding: 28px 24px 24px 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ui-sheet-backdrop.active .ui-bottom-sheet {
+            transform: scale(1);
+        }
+
+        .sheet-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px auto;
+            background: #fef2f2;
+            color: var(--danger-red);
+        }
+
+        .sheet-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        .sheet-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .sheet-message {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .btn-sheet-close {
+            width: 100%;
+            height: 48px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(128, 0, 32, 0.15);
+        }
+        
+        .btn-sheet-close:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
@@ -376,19 +459,24 @@
         
         <div class="app-content">
             
-            <!-- Logo Header -->
             <div class="brand-header">
                 <img class="logo-image" src="birrgo-logo.png" alt="BirrGo Logo">
+                
+                <button id="dashboardLogoutBtn" style="background: #f1f5f9; border: 1px solid var(--border-light); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-dark); cursor: pointer;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
             </div>
 
             <h1 class="page-title">Lottery</h1>
 
-            <!-- Premium Dynamic Featured Carousels -->
             <h2 class="section-heading">Upcoming Lotteries</h2>
             <div class="featured-scroll-row">
                 
-                <!-- Premium Entry 1 -->
-                <div class="featured-card">
+                <div class="featured-card" id="jetourRaffleCard">
                     <span class="badge-premium">Grand Raffle</span>
                     <div class="card-img-wrapper">
                         <img src="33111.jpg" alt="Jetour Dashing Car">
@@ -402,13 +490,14 @@
                     </div>
                 </div>
 
-                <!-- Premium Entry 2 -->
-                <div class="featured-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+                <div class="featured-card" id="monthlyRaffleCard">
                     <span class="badge-premium" style="background: var(--success-green); color: #fff;">Monthly</span>
-                    <div class="card-img-wrapper" style="background: rgba(255,255,255,0.03); font-size: 42px;">🏦</div>
+                    <div class="card-img-wrapper">
+                        <img src="33440.png" alt="Monthly BirrDraw">
+                    </div>
                     <div class="featured-card-body">
                         <h3 class="featured-title">Monthly BirrDraw</h3>
-                        <p class="featured-meta">Ticket Price: <span>10 Birr</span><br>Jackpot: 1,000,000 Birr Cash</p>
+                        <p class="featured-meta">Ticket Price: <span>200 Birr</span><br>Jackpot: 1,000,000 Birr Cash</p>
                         <div class="card-footer-row">
                             <span class="countdown-pill">⏳ Closes in 1D 5H</span>
                         </div>
@@ -417,7 +506,6 @@
 
             </div>
 
-            <!-- Active Standard Ledger Rows -->
             <h2 class="section-heading">Active Lotteries</h2>
             <div class="active-list-stack">
                 
@@ -429,44 +517,25 @@
                             <p>Draws every Friday<br>Jackpot: 50,000 Birr | Ticket: 10 Birr</p>
                         </div>
                     </div>
-                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
-                </div>
-
-                <div class="list-item-card">
-                    <div class="list-item-left">
-                        <div class="list-icon-box" style="background-color: #f0f4f8; color: #0d3b66;">💸</div>
-                        <div class="list-item-info">
-                            <h4>Instant Cash Draw</h4>
-                            <p>Draws every 3 hours<br>Jackpot: 2,000 Birr | Ticket: 1 Birr</p>
-                        </div>
-                    </div>
-                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
-                </div>
-
-                <div class="list-item-card">
-                    <div class="list-item-left">
-                        <div class="list-icon-box" style="background-color: #fcf6f0; color: #e65100;">🎁</div>
-                        <div class="list-item-info">
-                            <h4>Gadget Surprise</h4>
-                            <p>Next Draw: iPhone 15<br>Ticket: 5 Birr</p>
-                        </div>
-                    </div>
-                    <button class="btn-buy-mini" onclick="alert('Processing Ticket Purchase...')">Buy</button>
+                    <button class="btn-buy-mini">Buy</button>
                 </div>
 
             </div>
 
-            <!-- Master Action Group -->
             <div class="global-action-area">
-                <button class="btn-action-outline" onclick="alert('Loading entries archive...')">My Tickets</button>
-                <button class="btn-action-filled" onclick="alert('Instant ticket engine pooling...')">Quick Buy</button>
+                <button class="btn-action-outline">My Tickets</button>
+                <button class="btn-action-filled">Quick Buy</button>
             </div>
         </div>
 
-        <!-- Sticky Persistent Premium Navigation Frame -->
         <nav class="bottom-nav-bar">
             <a href="dashboard.html" class="nav-item">
-                <svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
                 Hub
             </a>
             <a href="task.html" class="nav-item">
@@ -485,7 +554,82 @@
             </a>
         </nav>
 
+        <div class="ui-sheet-backdrop" id="errorSheetBackdrop">
+            <div class="ui-bottom-sheet">
+                <div class="sheet-icon">
+                    <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <div class="sheet-title">Insufficient Balance</div>
+                <div class="sheet-message">Sorry, your wallet balance is insufficient to enter the Grand Car Raffle. A minimum of 5,000 Birr is required.</div>
+                <button class="btn-sheet-close" id="closeSheetBtn">Got it</button>
+            </div>
+        </div>
+
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCRHoIZf1ZPR9m3YYTv-I9CfwyGqsSOMWo",
+            authDomain: "birrgo-fdf7e.firebaseapp.com",
+            databaseURL: "https://birrgo-fdf7e-default-rtdb.firebaseio.com",
+            projectId: "birrgo-fdf7e",
+            storageBucket: "birrgo-fdf7e.firebasestorage.app",
+            messagingSenderId: "2317445154",
+            appId: "1:2317445154:web:4275cbb0f46b28f64f827b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        let activeUserPhone = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            activeUserPhone = localStorage.getItem('auth_session_phone');
+            if (!activeUserPhone) {
+                window.location.href = "login.html";
+                return;
+            }
+            
+            setupLogoutHandler();
+            setupGates();
+            setupSheetActions();
+        });
+
+        function setupLogoutHandler() {
+            document.getElementById('dashboardLogoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('auth_session_phone');
+                window.location.href = "login.html";
+            });
+        }
+
+        function setupGates() {
+            const jetourCard = document.getElementById('jetourRaffleCard');
+            if (jetourCard) {
+                jetourCard.addEventListener('click', () => {
+                    window.location.href = "jetour.html";
+                });
+            }
+
+            const monthlyCard = document.getElementById('monthlyRaffleCard');
+            if (monthlyCard) {
+                monthlyCard.addEventListener('click', () => {
+                    window.location.href = "monthly.html";
+                });
+            }
+        }
+
+        function setupSheetActions() {
+            document.getElementById('closeSheetBtn').addEventListener('click', () => {
+                document.getElementById('errorSheetBackdrop').classList.remove('active');
+            });
+            document.getElementById('errorSheetBackdrop').addEventListener('click', (e) => {
+                if(e.target.id === 'errorSheetBackdrop') {
+                    document.getElementById('errorSheetBackdrop').classList.remove('active');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

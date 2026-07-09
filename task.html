@@ -7,7 +7,7 @@
     <!-- Premium, modern tech typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -82,20 +82,42 @@
             object-fit: contain;
         }
 
-        .page-title {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            letter-spacing: -0.6px;
+        /* Profile Avatar Button Setup matching 33402.jpg */
+        .profile-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #eaf0f6;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
+        .profile-btn:active {
+            transform: scale(0.94);
+            background-color: #e2e8f0;
+        }
+
+        .profile-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        /* ZOOMED / BIG SECTION HEADING */
         .section-heading {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 14px;
-            letter-spacing: -0.4px;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
         }
 
         /* Task List Matrix Stack */
@@ -485,12 +507,16 @@
         
         <div class="app-content">
             
-            <!-- Branding Header Row -->
+            <!-- Branding Header Row with Profile / Logout Button -->
             <div class="brand-header">
                 <img class="logo-image" src="birrgo-logo.png" alt="BirrGo Mobile Wallet">
+                <button class="profile-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"></circle>
+                    </svg>
+                </button>
             </div>
-
-            <h1 class="page-title">Tasks</h1>
 
             <h2 class="section-heading">Watch & Earn</h2>
             <div class="active-list-stack" id="video-task-container">
@@ -510,8 +536,11 @@
         <!-- Sticky Persistent Premium Navigation Frame -->
         <nav class="bottom-nav-bar">
             <a href="dashboard.html" class="nav-item">
-                <svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                Hub
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Home
             </a>
             <a href="#" class="nav-item active-tab">
                 <div class="tab-icon-wrapper">
@@ -605,6 +634,7 @@
             }
             initTasks();
             setupOverlayEvents();
+            setupProfileEvents();
         });
 
         function displayAppModal(type, title, message, onConfirm = null) {
@@ -756,6 +786,20 @@
                 adIframe.src = "";
                 adViewerOverlay.style.display = "none";
                 initTasks();
+            });
+        }
+
+        function setupProfileEvents() {
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                displayAppModal(
+                    'lock', 
+                    'Sign Out', 
+                    'Are you sure you want to end your session and return to the login screen?', 
+                    () => {
+                        localStorage.removeItem('auth_session_phone');
+                        window.location.href = "login.html";
+                    }
+                );
             });
         }
 

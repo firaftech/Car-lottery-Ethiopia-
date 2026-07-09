@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BirrGo - Premium Wallet</title>
-    <!-- Premium, modern tech typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -20,8 +19,13 @@
             --border-light: #e2e8f0;
             --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
             --success-green: #10b981;
+            --warning-amber: #f59e0b;
             --border-radius-lg: 24px;
             --border-radius-md: 16px;
+            
+            /* Premium Gold Chip Matrix Colors */
+            --gold-metallic: linear-gradient(135deg, #ffe07d 0%, #f5af19 45%, #e65c00 100%);
+            --gold-lines: rgba(139, 92, 26, 0.25);
         }
 
         * {
@@ -124,21 +128,80 @@
             align-items: flex-start;
         }
 
+        /* High-End Realistic Gold SIM Chip */
         .card-chip {
-            width: 42px;
+            width: 44px;
             height: 32px;
-            background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+            background: var(--gold-metallic);
             border-radius: 6px;
             position: relative;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(184, 134, 11, 0.4);
+            overflow: hidden;
+        }
+
+        /* Microchip Circuit Internal Lines */
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            width: 14px;
+            height: 100%;
+            border-left: 1px solid var(--gold-lines);
+            border-right: 1px solid var(--gold-lines);
+            pointer-events: none;
+        }
+
+        .card-chip::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            height: 11px;
+            border-top: 1px solid var(--gold-lines);
+            border-bottom: 1px solid var(--gold-lines);
+            pointer-events: none;
+        }
+
+        /* Identity Eye Box styling */
+        .card-identity-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .card-type {
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-style: italic;
-            opacity: 0.9;
+            font-size: 13px;
+            font-weight: 700;
+            opacity: 0.85;
+        }
+
+        .btn-eye-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-eye-toggle:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-eye-toggle svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
         }
 
         .card-number {
@@ -180,14 +243,14 @@
             margin-top: 10px;
         }
 
-        .asset-stack, .history-stack {
+        .history-stack {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 24px;
         }
 
-        .asset-card, .history-card {
+        .history-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -198,30 +261,13 @@
             box-shadow: var(--card-shadow);
         }
 
-        .asset-left, .history-left {
+        .history-left {
             display: flex;
             align-items: center;
             gap: 14px;
         }
 
-        .asset-img-box, .history-icon-box {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fdf2f4;
-        }
-
-        .asset-img-box img {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-        }
-
-        .asset-icon-fallback, .history-icon-box {
+        .history-icon-box {
             font-size: 20px;
             background-color: #f1f5f9;
             width: 48px;
@@ -232,34 +278,28 @@
             justify-content: center;
         }
 
-        .asset-info h4, .history-info h4 {
+        .history-info h4 {
             font-size: 15px;
             font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 3px;
         }
 
-        .asset-info p, .history-info p {
+        .history-info p {
             font-size: 12px;
             font-weight: 500;
             color: var(--text-muted);
         }
 
-        .asset-right, .history-right {
+        .history-right {
             text-align: right;
         }
 
-        .asset-amount, .history-amount {
+        .history-amount {
             font-size: 15px;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 2px;
-        }
-
-        .asset-status {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--success-green);
         }
 
         /* Specialized Real-Time Transaction Log Colors */
@@ -276,7 +316,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
         }
 
         .btn-wallet-action {
@@ -367,6 +407,162 @@
             stroke: var(--primary-burgundy);
             stroke-width: 2.4;
         }
+
+        /* Premium Security Dialog Input Popups Layout Structural Nodes */
+        .security-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 5000;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .security-modal-backdrop.show-modal {
+            display: flex;
+            opacity: 1;
+        }
+        .security-modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 360px;
+            border-radius: var(--border-radius-lg);
+            padding: 28px 24px 24px 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transform: scale(0.92);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .security-modal-backdrop.show-modal .security-modal-card {
+            transform: scale(1);
+        }
+        .security-modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #fdf2f4;
+            color: var(--primary-burgundy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            transition: all 0.3s ease;
+        }
+        .security-modal-icon.bg-lock {
+            background: #fffbeb;
+            color: var(--warning-amber);
+        }
+        .security-modal-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+        .security-modal-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .security-modal-desc {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        /* New Embedded Error UI Styling */
+        .modal-error-banner {
+            display: none;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fee2e2;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+            animation: shakeFeedback 0.35s ease-in-out;
+        }
+
+        @keyframes shakeFeedback {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .security-password-input {
+            width: 100%;
+            height: 50px;
+            border-radius: var(--border-radius-md);
+            border: 1.5px solid var(--border-light);
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .security-password-input:focus {
+            border-color: var(--primary-burgundy);
+        }
+        
+        /* Interactive dynamic error state variations */
+        .security-modal-card.has-error .security-password-input {
+            border-color: #dc2626;
+            background-color: #fffafb;
+        }
+        .security-modal-card.has-error .security-modal-icon {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .security-modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+        }
+        .security-modal-actions.single-btn {
+            grid-template-columns: 1fr;
+        }
+        .btn-modal-cancel {
+            height: 48px;
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-modal-submit {
+            height: 48px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(128, 0, 32, 0.15);
+        }
+        .btn-modal-submit:active, .btn-modal-cancel:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
@@ -375,85 +571,58 @@
         
         <div class="app-content">
             
-            <!-- Logo Header -->
             <div class="brand-header">
                 <img class="logo-image" src="birrgo-logo.png" alt="BirrGo Logo">
+                <button id="dashboardLogoutBtn" style="background: #f1f5f9; border: 1px solid var(--border-light); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-dark); cursor: pointer; transition: all 0.2s ease; box-shadow: var(--card-shadow);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
             </div>
 
             <h1 class="page-title">Wallet Ledger</h1>
 
-            <!-- Premium Financial Asset Card Layout -->
             <div class="digital-card">
                 <div class="card-top">
                     <div class="card-chip"></div>
-                    <div class="card-type" id="wallet-card-identity">Elite User</div>
+                    <div class="card-identity-box">
+                        <div class="card-type" id="wallet-card-identity">•••• ••••</div>
+                        <button class="btn-eye-toggle" id="eyeToggleBtn">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="card-number">•••• •••• •••• 2415</div>
+                <div class="card-number" id="wallet-card-number">•••• •••• •••• ••••</div>
                 
                 <div class="card-bottom">
                     <div>
-                        <div class="card-holder-label">Total Balance</div>
-                        <div class="card-holder-name" id="wallet-total-balance">0.00 Birr</div>
+                        <div class="card-holder-label">Card Holder</div>
+                        <div class="card-holder-name" id="wallet-holder-name">•••• ••••••</div>
                     </div>
                     <div style="text-align: right;">
-                        <div class="card-holder-label">Status</div>
-                        <div class="card-holder-name" style="font-size: 12px; text-transform: uppercase;">Active</div>
+                        <div class="card-holder-label">Total Balance</div>
+                        <div class="card-holder-name" id="wallet-total-balance" style="font-size: 16px; font-weight: 800;">0.00 Birr</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Financial Tools Controls -->
             <div class="wallet-actions">
-                <button class="btn-wallet-action primary" onclick="alert('Deposit gateway launching...')">
+                <button class="btn-wallet-action primary" id="depositBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
                     Deposit
                 </button>
-                <button class="btn-wallet-action secondary" onclick="alert('Withdraw handling terminal opening...')">
+                <button class="btn-wallet-action secondary" id="withdrawBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
                     Withdraw
                 </button>
             </div>
 
-            <!-- Asset Breakdown Allocation Segment -->
-            <h2 class="section-heading">Asset Balances</h2>
-            <div class="asset-stack">
-                
-                <!-- Dynamic Asset Category 1 (Integrated Task Rewards Layout) -->
-                <div class="asset-card">
-                    <div class="asset-left">
-                        <div class="asset-img-box">
-                            <img src="33164.png" alt="Birr Matrix Icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/7152/7152349.png'">
-                        </div>
-                        <div class="asset-info">
-                            <h4>Task Video Balance</h4>
-                            <p>Accumulated media profits</p>
-                        </div>
-                    </div>
-                    <div class="asset-right">
-                        <div class="asset-amount" id="task-sub-balance">0.00 Br</div>
-                        <div class="asset-status">Withdrawable</div>
-                    </div>
-                </div>
-
-                <!-- Asset Category 2 -->
-                <div class="asset-card">
-                    <div class="asset-left">
-                        <div class="asset-icon-fallback">💵</div>
-                        <div class="asset-info">
-                            <h4>Core Deposit Vault</h4>
-                            <p>Direct funding allocations</p>
-                        </div>
-                    </div>
-                    <div class="asset-right">
-                        <div class="asset-amount" id="vault-sub-balance">0.00 Br</div>
-                        <div class="asset-status">Liquid</div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Live Transaction History Visual Interface Feed -->
             <h2 class="section-heading">Transaction History</h2>
             <div class="history-stack" id="transaction-history-container">
                 <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
@@ -463,10 +632,12 @@
 
         </div>
 
-        <!-- Sticky Persistent Premium Navigation Frame -->
         <nav class="bottom-nav-bar">
             <a href="dashboard.html" class="nav-item">
-                <svg viewBox="0 0 24 24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
                 Hub
             </a>
             <a href="task.html" class="nav-item">
@@ -487,12 +658,29 @@
 
     </div>
 
-    <!-- Modular Real-Time Sync Pipeline Script Setup -->
+    <!-- Reusable Security & Info Modal Context Terminal -->
+    <div class="security-modal-backdrop" id="securityModal">
+        <div class="security-modal-card" id="securityModalCard">
+            <div class="security-modal-icon" id="modalIconBox">
+                <svg viewBox="0 0 24 24" id="modalIconSvg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3 class="security-modal-title" id="modalTitle">Enter PIN</h3>
+            <p class="security-modal-desc" id="modalDesc">Please input your 4-digit account security PIN to decrypt your secure ledger identity details.</p>
+            
+            <div class="modal-error-banner" id="modalErrorBanner"></div>
+
+            <input type="password" maxlength="4" inputmode="numeric" class="security-password-input" id="securePassInput" placeholder="••••">
+            <div class="security-modal-actions" id="modalActionsGroup">
+                <button class="btn-modal-cancel" id="closeModalBtn">Cancel</button>
+                <button class="btn-modal-submit" id="submitPassBtn">Verify</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Global Firebase Configuration Mapping Matrix
         const firebaseConfig = {
             apiKey: "AIzaSyCRHoIZf1ZPR9m3YYTv-I9CfwyGqsSOMWo",
             authDomain: "birrgo-fdf7e.firebaseapp.com",
@@ -508,46 +696,191 @@
         const db = getDatabase(app);
 
         let activeUserPhone = "";
+        let decryptedCardNum = "";
+        let decryptedFullName = "";
+        let infoIsVisible = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             activeUserPhone = localStorage.getItem('auth_session_phone');
             if (!activeUserPhone) {
-                activeUserPhone = "demo_guest_user";
-                localStorage.setItem('auth_session_phone', activeUserPhone);
+                window.location.href = "login.html";
+                return;
             }
 
-            document.getElementById('wallet-card-identity').innerText = `+${activeUserPhone.substring(0, 7)}...`;
-            
+            calculateCardIdentityMatrix();
             startLiveWalletListeners();
+            setupSecurityToggles();
+            setupFeatureGateways();
+            setupLogoutHandler();
         });
 
+        function setupLogoutHandler() {
+            document.getElementById('dashboardLogoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('auth_session_phone');
+                window.location.href = "login.html";
+            });
+        }
+
+        function calculateCardIdentityMatrix() {
+            const cleanPhone = activeUserPhone.replace(/\D/g, '');
+            const final6Reversed = cleanPhone.slice(-6).split('').reverse().join('');
+            const completeRawCardSequence = cleanPhone + final6Reversed;
+            decryptedCardNum = completeRawCardSequence.match(/.{1,4}/g).join(' ');
+            document.getElementById('wallet-card-identity').innerText = `+${cleanPhone.substring(0, 6)}...`;
+            
+            const userRef = ref(db, `users/${activeUserPhone}`);
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists() && snapshot.val().fullName) {
+                    decryptedFullName = snapshot.val().fullName;
+                } else {
+                    decryptedFullName = "Elite Member";
+                }
+            }).catch(() => {
+                decryptedFullName = "Elite Member";
+            });
+        }
+
+        function setupSecurityToggles() {
+            const modal = document.getElementById('securityModal');
+            const modalCard = document.getElementById('securityModalCard');
+            const errorBanner = document.getElementById('modalErrorBanner');
+            const passInput = document.getElementById('securePassInput');
+            const iconBox = document.getElementById('modalIconBox');
+            const iconSvg = document.getElementById('modalIconSvg');
+            const title = document.getElementById('modalTitle');
+            const desc = document.getElementById('modalDesc');
+            const actionsGroup = document.getElementById('modalActionsGroup');
+            
+            function clearErrorState() {
+                modalCard.classList.remove('has-error');
+                errorBanner.style.display = "none";
+                errorBanner.innerText = "";
+            }
+
+            document.getElementById('eyeToggleBtn').addEventListener('click', () => {
+                if (infoIsVisible) {
+                    document.getElementById('wallet-card-number').innerText = "•••• •••• •••• ••••";
+                    document.getElementById('wallet-holder-name').innerText = "•••• ••••••";
+                    document.getElementById('eyeToggleBtn').innerHTML = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+                    infoIsVisible = false;
+                } else {
+                    clearErrorState();
+                    iconBox.className = "security-modal-icon";
+                    iconSvg.innerHTML = `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>`;
+                    title.innerText = "Enter PIN";
+                    desc.innerText = "Please input your 4-digit account security PIN to decrypt your secure ledger identity details.";
+                    passInput.style.display = "block";
+                    passInput.value = "";
+                    actionsGroup.className = "security-modal-actions";
+                    actionsGroup.innerHTML = `
+                        <button class="btn-modal-cancel" id="closeModalBtn">Cancel</button>
+                        <button class="btn-modal-submit" id="submitPassBtn">Verify</button>
+                    `;
+                    
+                    document.getElementById('closeModalBtn').addEventListener('click', closeModalTerminal);
+                    document.getElementById('submitPassBtn').addEventListener('click', handlePinVerification);
+
+                    modal.style.display = "flex";
+                    setTimeout(() => modal.classList.add('show-modal'), 10);
+                }
+            });
+
+            function closeModalTerminal() {
+                modal.classList.remove('show-modal');
+                setTimeout(() => modal.style.display = "none", 200);
+            }
+
+            passInput.addEventListener('input', () => {
+                if(modalCard.classList.contains('has-error')) clearErrorState();
+            });
+
+            async function handlePinVerification() {
+                const typedPin = passInput.value.trim();
+                if(!typedPin) return;
+
+                const pinRef = ref(db, `users/${activeUserPhone}/securityPin`);
+                try {
+                    const snap = await get(pinRef);
+                    if(snap.exists() && String(snap.val()) === typedPin) {
+                        document.getElementById('wallet-card-number').innerText = decryptedCardNum;
+                        document.getElementById('wallet-holder-name').innerText = decryptedFullName;
+                        document.getElementById('eyeToggleBtn').innerHTML = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+                        infoIsVisible = true;
+                        closeModalTerminal();
+                    } else {
+                        modalCard.classList.add('has-error');
+                        errorBanner.innerText = "Invalid security PIN sequence. Try again.";
+                        errorBanner.style.display = "block";
+                        passInput.value = "";
+                        errorBanner.style.animation = 'none';
+                        errorBanner.offsetHeight; 
+                        errorBanner.style.animation = null;
+                    }
+                } catch(e) {
+                    modalCard.classList.add('has-error');
+                    errorBanner.innerText = "Verification connection interrupted.";
+                    errorBanner.style.display = "block";
+                }
+            }
+        }
+
+        function setupFeatureGateways() {
+            const modal = document.getElementById('securityModal');
+            const iconBox = document.getElementById('modalIconBox');
+            const iconSvg = document.getElementById('modalIconSvg');
+            const title = document.getElementById('modalTitle');
+            const desc = document.getElementById('modalDesc');
+            const passInput = document.getElementById('securePassInput');
+            const actionsGroup = document.getElementById('modalActionsGroup');
+            const errorBanner = document.getElementById('modalErrorBanner');
+            const modalCard = document.getElementById('securityModalCard');
+
+            function launchLockedNotice(type) {
+                modalCard.classList.remove('has-error');
+                errorBanner.style.display = "none";
+                
+                iconBox.className = "security-modal-icon bg-lock";
+                iconSvg.innerHTML = `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>`;
+                
+                if (type === 'deposit') {
+                    title.innerText = "Deposit Gateway Locked";
+                    desc.innerText = "The local premium automated deposit pipeline terminal is currently undergoing testing structural checks. Available in the next updates.";
+                } else {
+                    title.innerText = "Withdraw System Locked";
+                    desc.innerText = "The native withdrawal gateway is coming soon! Complete video tasks daily to continue stacking up your database wallet balance.";
+                }
+
+                passInput.style.display = "none";
+                actionsGroup.className = "security-modal-actions single-btn";
+                actionsGroup.innerHTML = `<button class="btn-modal-submit" id="dismissLockBtn">Understood</button>`;
+
+                document.getElementById('dismissLockBtn').addEventListener('click', () => {
+                    modal.classList.remove('show-modal');
+                    setTimeout(() => modal.style.display = "none", 200);
+                });
+
+                modal.style.display = "flex";
+                setTimeout(() => modal.classList.add('show-modal'), 10);
+            }
+
+            document.getElementById('depositBtn').addEventListener('click', () => launchLockedNotice('deposit'));
+            document.getElementById('withdrawBtn').addEventListener('click', () => launchLockedNotice('withdraw'));
+        }
+
         function startLiveWalletListeners() {
-            // 1. Listen to Master Balance Node
             const balanceRef = ref(db, `users/${activeUserPhone}/walletBalance`);
             onValue(balanceRef, (snapshot) => {
                 const balanceVal = snapshot.val();
                 const numericTotal = balanceVal !== null ? parseFloat(balanceVal) : 0.00;
-                
                 document.getElementById('wallet-total-balance').innerText = `${numericTotal.toFixed(2)} Birr`;
-                
-                // For demonstration allocation breakdown UI matching design mechanics:
-                // We split the visual card values to fill sub-pools dynamically
-                if(numericTotal > 110) {
-                    document.getElementById('vault-sub-balance').innerText = "110.00 Br";
-                    document.getElementById('task-sub-balance').innerText = `${(numericTotal - 110).toFixed(2)} Br`;
-                } else {
-                    document.getElementById('vault-sub-balance').innerText = `${numericTotal.toFixed(2)} Br`;
-                    document.getElementById('task-sub-balance').innerText = "0.00 Br";
-                }
             });
 
-            // 2. Real-Time Transaction Log Parser Stream
             const historyRef = ref(db, `users/${activeUserPhone}/transactions`);
             const historyContainer = document.getElementById('transaction-history-container');
 
             onValue(historyRef, (snapshot) => {
                 const data = snapshot.val();
-                historyContainer.innerHTML = ''; // Wipe loading placeholder entries
+                historyContainer.innerHTML = ''; 
 
                 if (!data) {
                     historyContainer.innerHTML = `
@@ -557,15 +890,13 @@
                     return;
                 }
 
-                // Map objects array structure into structural reverse chronologic arrays
                 const transactionList = Object.keys(data).map(key => data[key]);
-                transactionList.reverse(); // Forces new items to view first at top
+                transactionList.reverse(); 
 
                 transactionList.forEach(tx => {
                     const cardRow = document.createElement('div');
                     cardRow.className = 'history-card';
 
-                    // Parse type metrics for icons & explicit math operators
                     const isIncome = tx.type === 'income' || tx.amount > 0;
                     const visualSymbol = isIncome ? '⚡' : '🎟️';
                     const stylingClass = isIncome ? 'income' : 'expense';

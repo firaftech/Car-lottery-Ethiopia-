@@ -6,7 +6,7 @@
     <title>BirrGo - Create Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -335,7 +335,6 @@
                         </svg>
                         <span class="country-code">+251</span>
                     </div>
-                    <!-- Fixed to require exactly 9 characters maximum -->
                     <input type="tel" id="regPhone" class="input-box phone-indent" placeholder="9xxxxxxxx" required maxlength="9" pattern="[79][0-9]{8}">
                     <div class="input-icon-right">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -348,7 +347,6 @@
 
             <div class="input-group">
                 <span class="field-label">Full Name <span class="label-required">*</span></span>
-                <!-- Updated placeholder to reflect strict structure rules -->
                 <input type="text" id="regName" class="input-box" placeholder="First Middle Last" required>
                 <div class="input-icon-right">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -409,12 +407,13 @@
             const urlParams = new URLSearchParams(window.location.search);
             const refParam = urlParams.get('ref');
             if (refParam) {
-                referrerPhone = refParam.trim().replace(/^0+/, '').replace(/^\+251/, '');
-                document.getElementById('referrer-label').innerHTML = `Invited by: <span style="color:var(--primary-burgundy);font-weight:700;">+251${referrerPhone}</span>`;
+                referrerPhone = refParam.trim().replace(/\D/g, '').slice(-9);
+                if (referrerPhone) {
+                    document.getElementById('referrer-label').innerHTML = `Invited by: <span style="color:var(--primary-burgundy);font-weight:700;">+251${referrerPhone}</span>`;
+                }
             }
         });
 
-        // Interactive Keypress Filter: Prevents typing letters or symbols in the phone input
         document.getElementById('regPhone').addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
         });
@@ -438,13 +437,11 @@
 
             let cleanPhone = rawPhone.replace(/^0+/, '');
             
-            // Validate strict numeric length configuration
             if (!/^[79][0-9]{8}$/.test(cleanPhone)) {
                 showNotification("Phone must be exactly 9 digits starting with 7 or 9.");
                 return;
             }
 
-            // Strict Full Name breakdown evaluation check (First, Middle, Last)
             const nameParts = fullName.split(/\s+/).filter(part => part.length > 0);
             if (nameParts.length !== 3) {
                 showNotification("Please enter exactly 3 names: First, Middle, and Last name.");
@@ -492,9 +489,7 @@
                     const inviterBalanceRef = ref(db, `users/${referrerPhone}/walletBalance`);
                     const inviterTxRef = ref(db, `users/${referrerPhone}/transactions`);
                     
-                    const fixedBonus = 20; 
-                    
-                    // Safely isolates the first item index out of the clean 3-part name array
+                    const fixedBonus = 20.00; 
                     const firstNameOnly = nameParts[0];
 
                     try {
@@ -504,12 +499,17 @@
                             return parsedBalance + fixedBonus;
                         });
 
+                        // Fixed timestamp format optimization to seamlessly match your wallet app layout ledger
+                        const now = new Date();
+                        const walletFormattedTime = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' + 
+                                                   now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
                         const newTxNode = push(inviterTxRef);
                         await set(newTxNode, {
                             title: `Referral Bonus (${firstNameOnly})`,
                             amount: fixedBonus,
                             type: "income",
-                            timestamp: new Date().toLocaleString()
+                            timestamp: walletFormattedTime
                         });
                     } catch (referralError) {
                         console.error("Referral processing error: ", referralError);
